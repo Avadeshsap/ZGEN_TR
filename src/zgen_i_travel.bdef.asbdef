@@ -1,10 +1,14 @@
 managed implementation in class zbp_gen_i_travel unique;
 strict ( 2 );
+//with draft;
 
 define behavior for ZGEN_I_TRAVEL alias Travel
 persistent table zgen_travel
+//draft table zgen_d_travel
 lock master
+//total etag LastChangedAt
 authorization master ( global, instance )
+
 etag master LocalLastChangedAt
 {
   create;
@@ -37,6 +41,7 @@ etag master LocalLastChangedAt
 
 define behavior for ZGEN_I_BOOKING alias Booking
 persistent table zgen_booking
+//draft table zgen_d_booking
 lock dependent by _Travel
 authorization dependent by _Travel
 etag master LocalLastChangedAt
@@ -67,6 +72,7 @@ etag master LocalLastChangedAt
 
 define behavior for ZGEN_I_BKSUPPL alias BokkingSupplement
 persistent table zgen_bksuppl
+//draft table zgen_d_bksuppl
 lock dependent by _Travel
 authorization dependent by _Travel
 etag master LocalLastChangedAt

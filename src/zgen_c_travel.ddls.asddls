@@ -2,6 +2,7 @@
 @EndUserText.label: 'Consumption For Travel'
 @Metadata.ignorePropagatedAnnotations: true
 @VDM.viewType: #CONSUMPTION
+@Metadata.allowExtensions: true
 define root view entity ZGEN_C_TRAVEL
   as projection on ZGEN_I_TRAVEL
 {

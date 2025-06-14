@@ -1,0 +1,6 @@
+@EndUserText.label: 'SD for Travel'
+define service ZGEN_SD_TRAVEL {
+  expose ZGEN_C_TRAVEL  as Travel;
+  expose ZGEN_C_BOOKING as Booking;
+  expose ZGEN_C_BKSUPPL as BookingSupplement;
+}

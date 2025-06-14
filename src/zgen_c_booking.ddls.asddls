@@ -1,6 +1,7 @@
 @AccessControl.authorizationCheck: #NOT_REQUIRED
 @EndUserText.label: 'Booking Consumption View'
 @Metadata.ignorePropagatedAnnotations: true
+@Metadata.allowExtensions: true
 @VDM.viewType: #CONSUMPTION
 define view entity ZGEN_C_BOOKING
   as projection on ZGEN_I_BOOKING
