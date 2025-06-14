@@ -1,0 +1,29 @@
+projection;
+strict ( 2 );
+
+define behavior for ZGEN_C_TRAVEL alias Travel
+{
+  use create;
+  use update;
+  use delete;
+
+  use association _Booking { create; }
+}
+
+define behavior for ZGEN_C_BOOKING alias Booking
+{
+  use update;
+  use delete;
+
+  use association _Travel;
+  use association _Bksuppl { create; }
+}
+
+define behavior for ZGEN_C_BKSUPPL alias BookingSupplement
+{
+  use update;
+  use delete;
+
+  use association _Travel;
+  use association _Booking;
+}
