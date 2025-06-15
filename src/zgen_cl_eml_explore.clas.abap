@@ -24,6 +24,8 @@ CLASS zgen_cl_eml_explore IMPLEMENTATION.
 
 * The %cid value will automatically assign the UUID for us. Any name can be given here, such as Dummy1
 
+    DATA(lv_test) = 'AD'.
+
     MODIFY ENTITY zgen_i_travel
     CREATE
     SET FIELDS WITH VALUE #( ( %cid          = 'Dummy1'
@@ -145,14 +147,16 @@ CLASS zgen_cl_eml_explore IMPLEMENTATION.
 
     DATA: lt_update TYPE TABLE FOR UPDATE zgen_i_travel.
 
-    lt_update = VALUE #( ( TravelUuid = 'D82947D1FF94844A1900EAE279D3A496' CurrencyCode = 'USD'
+    lt_update = VALUE #( ( TravelUuid = '9E830BD2257D1FD092B9A4824F66AEA8' CurrencyCode = 'USD'
        Description = 'EML Update Operation' BookingFee = 50 ) ).
 
     MODIFY ENTITIES OF zgen_i_travel
     ENTITY Travel
     UPDATE "SET FIELDS
     FIELDS ( CurrencyCode Description BookingFee )
-    WITH lt_update.
+    WITH lt_update
+    FAILED DATA(lt_failed_up)
+    REPORTED DATA(lt_reported_up).
 
     COMMIT ENTITIES.
 
@@ -164,7 +168,7 @@ CLASS zgen_cl_eml_explore IMPLEMENTATION.
     MODIFY ENTITIES OF zgen_i_travel
     ENTITY Travel
     DELETE
-    FROM VALUE #( ( TravelUuid = '264A10134DC01FE092A1A444BDA54D83' ) )
+    FROM VALUE #( ( TravelUuid = '22145873AFD91FE092B99725970D528F' ) )
     FAILED DATA(lt_failed)
     REPORTED DATA(lt_reported).
 
@@ -180,7 +184,7 @@ CLASS zgen_cl_eml_explore IMPLEMENTATION.
 
     READ ENTITIES OF zgen_i_travel
     ENTITY Travel
-    FROM VALUE #( ( TravelUuid = 'D82947D1FF94844A1900EAE279D3A496' ) )
+    FROM VALUE #( ( TravelUuid = '9E830BD2257D1FD092B9A4824F66AEA8' ) )
     RESULT DATA(lt_case1).
 
     out->write( 'READ operation without FIELDS keyword' ).
@@ -190,7 +194,7 @@ CLASS zgen_cl_eml_explore IMPLEMENTATION.
     READ ENTITIES OF zgen_i_travel
     ENTITY Travel
     FIELDS ( TravelId AgencyId )
-    WITH VALUE #( ( TravelUuid = 'D82947D1FF94844A1900EAE279D3A496' ) )
+    WITH VALUE #( ( TravelUuid = '9E830BD2257D1FD092B9A4824F66AEA8' ) )
     RESULT DATA(lt_case2).
 
     out->write( 'READ operation with FIELDS keyword' ).
@@ -200,7 +204,7 @@ CLASS zgen_cl_eml_explore IMPLEMENTATION.
     READ ENTITIES OF zgen_i_travel
     ENTITY Travel
     ALL FIELDS
-    WITH VALUE #( ( TravelUuid = 'D82947D1FF94844A1900EAE279D3A496' ) )
+    WITH VALUE #( ( TravelUuid = '9E830BD2257D1FD092B9A4824F66AEA8' ) )
     RESULT DATA(lt_case3).
 
     out->write( 'READ operation with the ALL FIELDS keyword' ).
@@ -211,7 +215,7 @@ CLASS zgen_cl_eml_explore IMPLEMENTATION.
     ENTITY Travel
     BY \_Booking
     ALL FIELDS
-    WITH VALUE #( ( TravelUuid = 'D82947D1FF94844A1900EAE279D3A496' ) )
+    WITH VALUE #( ( TravelUuid = '9E830BD2257D1FD092B9A4824F66AEA8' ) )
     RESULT DATA(lt_case4).
 
     out->write( 'READ operation with ASSOCIATION' ).
