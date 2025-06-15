@@ -1,29 +1,40 @@
 projection;
 strict ( 2 );
+use draft;
 
 define behavior for ZGEN_C_TRAVEL alias Travel
+use etag
 {
   use create;
   use update;
   use delete;
 
-  use association _Booking { create; }
+  use action Edit;
+  use action Activate;
+  use action Discard;
+  use action Prepare;
+  use action Resume;
+
+
+  use association _Booking { create; with draft;}
 }
 
 define behavior for ZGEN_C_BOOKING alias Booking
+use etag
 {
   use update;
   use delete;
 
-  use association _Travel;
-  use association _Bksuppl { create; }
+  use association _Travel { with draft;}
+  use association _Bksuppl { create;  with draft;}
 }
 
 define behavior for ZGEN_C_BKSUPPL alias BookingSupplement
+use etag
 {
   use update;
   use delete;
 
-  use association _Travel;
-  use association _Booking;
+  use association _Travel { with draft; }
+  use association _Booking { with draft; }
 }

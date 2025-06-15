@@ -1,4 +1,12 @@
 @Metadata.layer: #CORE
+
+@UI:{ headerInfo:{ typeName: 'Travel',
+                 typeNamePlural: 'Travels',
+                 title:{ type: #STANDARD ,value :'TravelId' } },                
+                 presentationVariant: [{ sortOrder: [{ by : 'TravelId',direction: #DESC }] }]            
+               }
+
+
 annotate entity ZGEN_C_TRAVEL
     with 
 {

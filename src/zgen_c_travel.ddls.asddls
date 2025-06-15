@@ -4,6 +4,7 @@
 @VDM.viewType: #CONSUMPTION
 @Metadata.allowExtensions: true
 define root view entity ZGEN_C_TRAVEL
+provider contract transactional_query
   as projection on ZGEN_I_TRAVEL
 {
   key TravelUuid,

@@ -1,4 +1,11 @@
 @Metadata.layer: #CORE
+
+@UI:{ headerInfo : { typeName: 'Booking' ,
+                     typeNamePlural: 'Bookings' ,
+                     title: { type: #STANDARD , value: 'BookingId' }} ,
+                     presentationVariant: [{ sortOrder: [{ by : 'BookingId',direction: #DESC }] }] }
+
+
 annotate entity ZGEN_C_BOOKING
     with 
 {

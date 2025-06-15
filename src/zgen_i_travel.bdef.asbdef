@@ -1,12 +1,12 @@
 managed implementation in class zbp_gen_i_travel unique;
 strict ( 2 );
-//with draft;
+with draft;
 
 define behavior for ZGEN_I_TRAVEL alias Travel
 persistent table zgen_travel
-//draft table zgen_d_travel
+draft table zgen_d_travel
 lock master
-//total etag LastChangedAt
+total etag LastChangedAt
 authorization master ( global, instance )
 
 etag master LocalLastChangedAt
@@ -15,7 +15,13 @@ etag master LocalLastChangedAt
   update;
   delete;
   field ( numbering : managed, readonly ) TravelUuid;
-  association _Booking { create; }
+  association _Booking { create; with draft;}
+
+draft action Resume;
+draft action Edit;
+draft action Discard;
+draft action Activate optimized;
+draft determine action Prepare;
 
   mapping for zgen_travel
     {
@@ -41,7 +47,7 @@ etag master LocalLastChangedAt
 
 define behavior for ZGEN_I_BOOKING alias Booking
 persistent table zgen_booking
-//draft table zgen_d_booking
+draft table zgen_d_booking
 lock dependent by _Travel
 authorization dependent by _Travel
 etag master LocalLastChangedAt
@@ -50,8 +56,8 @@ etag master LocalLastChangedAt
   delete;
   field ( numbering : managed, readonly ) BookingUuid;
   field ( readonly ) TravelUuid;
-  association _Travel;
-  association _Bksuppl { create; }
+  association _Travel { with draft; }
+  association _Bksuppl { create; with draft;}
 
   mapping for zgen_booking
     {
@@ -72,7 +78,7 @@ etag master LocalLastChangedAt
 
 define behavior for ZGEN_I_BKSUPPL alias BokkingSupplement
 persistent table zgen_bksuppl
-//draft table zgen_d_bksuppl
+draft table zgen_d_bksuppl
 lock dependent by _Travel
 authorization dependent by _Travel
 etag master LocalLastChangedAt
@@ -81,8 +87,8 @@ etag master LocalLastChangedAt
   delete;
   field ( numbering : managed, readonly ) BooksupplUuid;
   field ( readonly ) TravelUuid, BookingUuid;
-  association _Travel;
-  association _Booking;
+  association _Travel { with draft;}
+  association _Booking { with draft;}
 
   mapping for zgen_bksuppl
     {
