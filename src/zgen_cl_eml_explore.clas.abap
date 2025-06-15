@@ -53,7 +53,7 @@ CLASS zgen_cl_eml_explore IMPLEMENTATION.
 
     MODIFY ENTITY zgen_i_travel
     CREATE
-    FIELDS ( AgencyId Description BookingFee TotalPrice CurrencyCode OverallStatus BeginDate EndDate )
+    FIELDS ( AgencyId Description BookingFee TotalPrice CurrencyCode BeginDate EndDate )
     WITH VALUE #( ( %cid = 'Dummy2'
                      AgencyId      = '70028'
                      Description   = 'New Agency 70028 v2'
@@ -90,7 +90,7 @@ CLASS zgen_cl_eml_explore IMPLEMENTATION.
 
     MODIFY ENTITY zgen_i_travel
     CREATE
-    FIELDS ( AgencyId Description BookingFee TotalPrice CurrencyCode OverallStatus BeginDate EndDate )
+    FIELDS ( AgencyId Description BookingFee TotalPrice CurrencyCode BeginDate EndDate )
     WITH VALUE #( ( %cid = 'Dummy3'
                     AgencyId      = '70028'
                     Description   = 'New Agency 70028 v3'
@@ -276,7 +276,7 @@ CLASS zgen_cl_eml_explore IMPLEMENTATION.
 
     MODIFY ENTITY zgen_i_travel
       CREATE "determines the kind of operation
-      FIELDS ( TravelId AgencyId CustomerId BookingFee CurrencyCode Description ) WITH cr_tab   "Fields to be respected for the
+      FIELDS ( AgencyId CustomerId BookingFee CurrencyCode Description ) WITH cr_tab   "Fields to be respected for the
                                                        "input derived type and the input
                                                        "derived type itself
       MAPPED mapped_resp          "mapping information
