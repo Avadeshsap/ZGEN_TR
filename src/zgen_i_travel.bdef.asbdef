@@ -29,6 +29,7 @@ etag master LocalLastChangedAt
   determination setTravelID on save { create; }
   determination setStaustoOpen on modify { create; }
 
+
   mapping for zgen_travel
     {
       AgencyID           = agency_id;
@@ -61,9 +62,13 @@ etag master LocalLastChangedAt
   update;
   delete;
   field ( numbering : managed, readonly ) BookingUuid;
-  field ( readonly ) TravelUuid;
+  field ( readonly ) TravelUuid , BookingId ,BookingDate;
   association _Travel { with draft; }
   association _Bksuppl { create; with draft; }
+
+
+  determination setBookingId on save { create;}
+  determination setBookingDate on save { create;}
 
   mapping for zgen_booking
     {
@@ -92,9 +97,11 @@ etag master LocalLastChangedAt
   update;
   delete;
   field ( numbering : managed, readonly ) BooksupplUuid;
-  field ( readonly ) TravelUuid, BookingUuid;
+  field ( readonly ) TravelUuid, BookingUuid , BookingSupplementId;
   association _Travel { with draft; }
   association _Booking { with draft; }
+
+  determination setBookingSupplId on save { create;}
 
   mapping for zgen_bksuppl
     {

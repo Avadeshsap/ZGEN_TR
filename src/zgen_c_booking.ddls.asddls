@@ -20,6 +20,6 @@ define view entity ZGEN_C_BOOKING
       BookingStatus,
       LocalLastChangedAt,
       /* Associations */
-      _Bksuppl: redirected to composition child ZGEN_C_BKSUPPL,
-      _Travel: redirected to parent ZGEN_C_TRAVEL
+      _Bksuppl : redirected to composition child ZGEN_C_BKSUPPL,
+      _Travel  : redirected to parent ZGEN_C_TRAVEL
 }
