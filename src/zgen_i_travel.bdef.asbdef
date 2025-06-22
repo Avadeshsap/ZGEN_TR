@@ -16,14 +16,13 @@ etag master LocalLastChangedAt
   update;
   delete;
   field ( numbering : managed, readonly ) TravelUuid;
-  field ( readonly ) TravelId, OverallStatus;
-  association _Booking { create; with draft; }
+  field ( readonly ) TravelId, OverallStatus, TotalPrice, LocalCreatedAt, LocalCreatedBy, LocalLastChangedAt, LocalLastChangedBy, LastChangedAt;
+  field ( mandatory ) CustomerID, AgencyID, BeginDate, EndDate, CurrencyCode;
+  field ( features : instance ) BookingFee;
 
-  draft action Resume;
-  draft action Edit;
-  draft action Discard;
-  draft action Activate optimized;
-  draft determine action Prepare;
+  association _Booking { create ( features : instance ); with draft; }
+
+
 
 
 
@@ -31,12 +30,42 @@ etag master LocalLastChangedAt
   determination setStaustoOpen on modify { create; }
   determination calculateTotalPrice on modify { create; field BookingFee, CurrencyCode; }
 
-  action acceptTravel result [1] $self;
-  action rejectTravel result [1] $self;
-  action deductDiscount parameter ZGEN_A_DISCOUNT result [1] $self;
+
+  validation validateCustomer on save { create; field CustomerID; }
+  validation validateAgency on save { create; field AgencyID; }
+  validation validateDates on save { create; update; field BeginDate, EndDate; }
+
+
+  action ( features : instance ) acceptTravel result [1] $self;
+  action ( features : instance ) rejectTravel result [1] $self;
+  action ( features : instance ) deductDiscount parameter ZGEN_A_DISCOUNT result [1] $self { default function GetDefaultsFordeductDiscounts; }
   internal action reCalcTotalProce;
 
+  draft action Resume;
+  draft action Edit;
+  draft action Discard;
+  draft action Activate optimized;
+  draft determine action Prepare
+  {
+    validation validateCustomer;
+    validation validateAgency;
+    validation validateDates;
 
+  }
+
+
+
+
+  determine action validateCustomerID { validation validateCustomer; }
+  determine action validateAgencyID { validation validateAgency; }
+  determine action validateDatesVal { validation validateDates; }
+  side effects
+  { determine action validateCustomerID executed on field CustomerId affects messages;
+    determine action validateAgencyID executed on field AgencyId affects messages;
+    determine action validateDatesVal executed on field BeginDate, field EndDate affects messages;
+    field BookingFee affects field TotalPrice;
+    //    determine action Prepare executed on $self affects messages;
+  }
   mapping for zgen_travel
     {
       AgencyID           = agency_id;
@@ -70,7 +99,7 @@ etag master LocalLastChangedAt
   update;
   delete;
   field ( numbering : managed, readonly ) BookingUuid;
-  field ( readonly ) TravelUuid, BookingId, BookingDate;
+  field ( readonly ) TravelUuid, BookingId, BookingDate, LocalLastChangedAt;
   association _Travel { with draft; }
   association _Bksuppl { create; with draft; }
 

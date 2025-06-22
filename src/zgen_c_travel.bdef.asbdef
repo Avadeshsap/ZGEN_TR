@@ -1,11 +1,12 @@
-projection;
+projection implementation in class zbp_gen_c_travel unique;
 strict ( 2 );
 use draft;
+use side effects;
 
 define behavior for ZGEN_C_TRAVEL alias Travel
 use etag
 {
-  use create;
+  use create(augment);
   use update;
   use delete;
 
@@ -18,6 +19,11 @@ use etag
   use action acceptTravel;
   use action rejectTravel;
   use action deductDiscount;
+
+  use action validateCustomerID;
+  use action validateAgencyID;
+  use action validateDatesVal;
+  use function GetDefaultsFordeductDiscounts;
 
 
   use association _Booking { create; with draft;}
