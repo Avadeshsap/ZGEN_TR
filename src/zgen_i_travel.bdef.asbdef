@@ -1,8 +1,9 @@
-managed implementation in class zbp_gen_i_travel unique;
+managed;
 strict ( 2 );
 with draft;
 
 define behavior for ZGEN_I_TRAVEL alias Travel
+implementation in class zbp_gen_i_travel unique
 persistent table zgen_travel
 draft table zgen_d_travel
 lock master
@@ -28,6 +29,12 @@ etag master LocalLastChangedAt
 
   determination setTravelID on save { create; }
   determination setStaustoOpen on modify { create; }
+  determination calculateTotalPrice on modify { create; field BookingFee, CurrencyCode; }
+
+  action acceptTravel result [1] $self;
+  action rejectTravel result [1] $self;
+  action deductDiscount parameter ZGEN_A_DISCOUNT result [1] $self;
+  internal action reCalcTotalProce;
 
 
   mapping for zgen_travel
@@ -53,6 +60,7 @@ etag master LocalLastChangedAt
 }
 
 define behavior for ZGEN_I_BOOKING alias Booking
+implementation in class zbp_gen_i_Booking unique
 persistent table zgen_booking
 draft table zgen_d_booking
 lock dependent by _Travel
@@ -62,13 +70,14 @@ etag master LocalLastChangedAt
   update;
   delete;
   field ( numbering : managed, readonly ) BookingUuid;
-  field ( readonly ) TravelUuid , BookingId ,BookingDate;
+  field ( readonly ) TravelUuid, BookingId, BookingDate;
   association _Travel { with draft; }
   association _Bksuppl { create; with draft; }
 
 
-  determination setBookingId on save { create;}
-  determination setBookingDate on save { create;}
+  determination setBookingId on save { create; }
+  determination setBookingDate on save { create; }
+  determination calculateTotalPrice on modify { create; field FlightPrice, CurrencyCode; }
 
   mapping for zgen_booking
     {
@@ -88,6 +97,7 @@ etag master LocalLastChangedAt
 }
 
 define behavior for ZGEN_I_BKSUPPL alias BokkingSupplement
+implementation in class zbp_gen_i_bksuppl unique
 persistent table zgen_bksuppl
 draft table zgen_d_bksuppl
 lock dependent by _Travel
@@ -97,11 +107,13 @@ etag master LocalLastChangedAt
   update;
   delete;
   field ( numbering : managed, readonly ) BooksupplUuid;
-  field ( readonly ) TravelUuid, BookingUuid , BookingSupplementId;
+  field ( readonly ) TravelUuid, BookingUuid, BookingSupplementId;
   association _Travel { with draft; }
   association _Booking { with draft; }
 
-  determination setBookingSupplId on save { create;}
+  determination setBookingSupplId on save { create; }
+  determination calculateTotalPrice on modify { create; field Price, CurrencyCode; }
+
 
   mapping for zgen_bksuppl
     {
