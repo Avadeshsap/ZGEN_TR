@@ -53,9 +53,6 @@ etag master LocalLastChangedAt
 
   }
 
-
-
-
   determine action validateCustomerID { validation validateCustomer; }
   determine action validateAgencyID { validation validateAgency; }
   determine action validateDatesVal { validation validateDates; }
