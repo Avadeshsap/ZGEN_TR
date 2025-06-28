@@ -6,78 +6,84 @@
                      presentationVariant: [{ sortOrder: [{ by : 'BookingId',direction: #DESC }] }] }
 
 
-annotate entity ZGEN_C_BOOKING
-    with 
+annotate entity ZGEN_C_BOOKING with
 {
 
 
-@UI.facet: [{ 
-               id: 'Booking',
-               purpose: #STANDARD,
-               type: #IDENTIFICATION_REFERENCE,
-               label: 'Booking',
-               position: 10
-   
-},
+  @UI.facet: [{
+                 id: 'Booking',
+                 purpose: #STANDARD,
+                 type: #IDENTIFICATION_REFERENCE,
+                 label: 'Booking',
+                 position: 10
 
-{ 
-              id: 'BookingSupplement',
-              purpose: #STANDARD,
-              type: #LINEITEM_REFERENCE,
-              label: 'Booking Supplement',
-              targetElement: '_Bksuppl',
-              position: 20
+  },
 
-}
+  {
+                id: 'BookingSupplement',
+                purpose: #STANDARD,
+                type: #LINEITEM_REFERENCE,
+                label: 'Booking Supplement',
+                targetElement: '_Bksuppl',
+                position: 20
 
-
-]
+  }
 
 
+  ]
 
-    @UI.hidden: true
-    BookingUuid;
-    
-    @UI.hidden: true
-    TravelUuid;
-    
-    @UI.lineItem: [{ position: 10 ,importance: #HIGH }]
-    @UI.identification: [{ position: 10 ,importance: #HIGH }]
-    BookingId;
-    
-    @UI.lineItem: [{ position: 20 ,importance: #HIGH }]
-    @UI.identification: [{ position: 20 ,importance: #HIGH }]
-    BookingDate;
-    
-    @UI.lineItem: [{ position: 30 ,importance: #HIGH }]
-    @UI.identification: [{ position: 30 ,importance: #HIGH }]
-    CustomerId;
-    
-    @UI.lineItem: [{ position: 40 ,importance: #HIGH }]
-    @UI.identification: [{ position: 40 ,importance: #HIGH }]
-    CarrierId;
-    
-    @UI.lineItem: [{ position: 50 ,importance: #HIGH }]
-    @UI.identification: [{ position: 50 ,importance: #HIGH }]
-    ConnectionId;
-    
-    @UI.lineItem: [{ position: 60 ,importance: #HIGH }]
-    @UI.identification: [{ position: 60 ,importance: #HIGH }]
-    FlightDate;
-    
-    @UI.lineItem: [{ position: 70 ,importance: #HIGH }]
-    @UI.identification: [{ position: 70 ,importance: #HIGH }]
-    FlightPrice;
-    
-    //CurrencyCode;
-    
-    @UI.lineItem: [{ position: 80 ,importance: #HIGH }]
-    @UI.identification: [{ position: 80 ,importance: #HIGH }]
-    BookingStatus;
-    
-   // LocalLastChangedAt;
-    /* Associations */
-   // _Bksuppl;
-    //_Travel;
-    
+
+
+  @UI.hidden: true
+  BookingUuid;
+
+  @UI.hidden: true
+  TravelUuid;
+
+  @UI.lineItem: [{ position: 10 ,importance: #HIGH }]
+  @UI.identification: [{ position: 10 ,importance: #HIGH }]
+  BookingId;
+
+  @UI.lineItem: [{ position: 20 ,importance: #HIGH }]
+  @UI.identification: [{ position: 20 ,importance: #HIGH }]
+  BookingDate;
+
+  @UI.lineItem: [{ position: 30 ,importance: #HIGH }]
+  @UI.identification: [{ position: 30 ,importance: #HIGH }]
+  @Consumption.valueHelpDefinition: [{ entity:{ name: '/DMO/I_Customer_StdVH', element: 'CustomerID' },useForValidation: true }]
+  CustomerId;
+
+  @UI.lineItem: [{ position: 40 ,importance: #HIGH }]
+  @UI.identification: [{ position: 40 ,importance: #HIGH }]
+  @Consumption.valueHelpDefinition: [{ entity:{ name: '/DMO/I_Flight_StdVH', element: 'AirlineID' } }]
+  CarrierId;
+
+  @UI.lineItem: [{ position: 50 ,importance: #HIGH }]
+  @UI.identification: [{ position: 50 ,importance: #HIGH }]
+  @Consumption.valueHelpDefinition: [{ entity:{ name: '/DMO/I_Flight_StdVH', element: 'ConnectionID' },
+                                        additionalBinding: [{ localElement: 'CarrierId', element: 'AirlineID', usage: #FILTER_AND_RESULT  },
+                                                            { localElement: 'FlightDate', element: 'FlightDate', usage: #RESULT },
+                                                            { localElement: 'FlightPrice', element: 'Price', usage: #RESULT },
+                                                            { localElement: 'CurrencyCode', element: 'CurrencyCode', usage: #RESULT }] }]
+  ConnectionId;
+
+  @UI.lineItem: [{ position: 60 ,importance: #HIGH }]
+  @UI.identification: [{ position: 60 ,importance: #HIGH }]
+  FlightDate;
+
+  @UI.lineItem: [{ position: 70 ,importance: #HIGH }]
+  @UI.identification: [{ position: 70 ,importance: #HIGH }]
+  FlightPrice;
+
+  //CurrencyCode;
+
+  @UI.lineItem: [{ position: 80 ,importance: #HIGH }]
+  @UI.identification: [{ position: 80 ,importance: #HIGH }]
+  BookingStatus;
+
+  // LocalLastChangedAt;
+  /* Associations */
+  // _Bksuppl;
+  //_Travel;
+
 }

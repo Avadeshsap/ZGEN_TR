@@ -12,9 +12,9 @@ authorization master ( global, instance )
 
 etag master LocalLastChangedAt
 {
-  create;
-  update;
-  delete;
+  create(precheck);
+  update(precheck);
+  delete(precheck);
   field ( numbering : managed, readonly ) TravelUuid;
   field ( readonly ) TravelId, OverallStatus, TotalPrice, LocalCreatedAt, LocalCreatedBy, LocalLastChangedAt, LocalLastChangedBy, LastChangedAt;
   field ( mandatory ) CustomerID, AgencyID, BeginDate, EndDate, CurrencyCode;
@@ -57,7 +57,8 @@ etag master LocalLastChangedAt
   determine action validateAgencyID { validation validateAgency; }
   determine action validateDatesVal { validation validateDates; }
   side effects
-  { determine action validateCustomerID executed on field CustomerId affects messages;
+  {
+    determine action validateCustomerID executed on field CustomerId affects messages;
     determine action validateAgencyID executed on field AgencyId affects messages;
     determine action validateDatesVal executed on field BeginDate, field EndDate affects messages;
     field BookingFee affects field TotalPrice;
@@ -105,6 +106,12 @@ etag master LocalLastChangedAt
   determination setBookingDate on save { create; }
   determination calculateTotalPrice on modify { create; field FlightPrice, CurrencyCode; }
 
+  side effects
+  {
+
+    field FlightPrice affects field _Travel.TotalPrice;
+  }
+
   mapping for zgen_booking
     {
       CarrierId          = carrier_id;
@@ -139,6 +146,12 @@ etag master LocalLastChangedAt
 
   determination setBookingSupplId on save { create; }
   determination calculateTotalPrice on modify { create; field Price, CurrencyCode; }
+
+  side effects
+  {
+
+    field Price affects field _Travel.TotalPrice;
+  }
 
 
   mapping for zgen_bksuppl

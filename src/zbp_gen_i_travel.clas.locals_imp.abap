@@ -32,6 +32,14 @@ CLASS lhc_Travel DEFINITION INHERITING FROM cl_abap_behavior_handler.
       IMPORTING keys FOR travel~validatedates.
     METHODS getdefaultsfordeductdiscounts FOR READ
       IMPORTING keys FOR FUNCTION travel~getdefaultsfordeductdiscounts RESULT result.
+    METHODS precheck_create FOR PRECHECK
+      IMPORTING entities FOR CREATE travel.
+
+    METHODS precheck_update FOR PRECHECK
+      IMPORTING entities FOR UPDATE travel.
+
+    METHODS precheck_delete FOR PRECHECK
+      IMPORTING keys FOR DELETE travel.
 
     METHODS is_create_granted
       RETURNING VALUE(create_granted) TYPE abap_bool.
@@ -687,7 +695,7 @@ CLASS lhc_Travel IMPLEMENTATION.
 
     READ ENTITIES OF zgen_i_travel IN LOCAL MODE
         ENTITY Travel
-        FIELDS ( BookingFee )
+        FIELDS ( TotalPrice )
         WITH CORRESPONDING #( keys )
         RESULT DATA(travels)
         FAILED failed.
@@ -695,7 +703,7 @@ CLASS lhc_Travel IMPLEMENTATION.
 
     LOOP AT travels INTO DATA(travel).
 
-      IF travel-BookingFee >= 1000.
+      IF travel-TotalPrice >= 4000.
         APPEND VALUE #( %tky = travel-%tky
                         %param-discount_percent = 20 ) TO result.
       ELSE.
@@ -707,6 +715,40 @@ CLASS lhc_Travel IMPLEMENTATION.
     ENDLOOP.
 
 
+  ENDMETHOD.
+
+  METHOD precheck_create.
+
+
+    DATA(lv_test) = 'Test'.
+
+
+
+  ENDMETHOD.
+
+  METHOD precheck_update.
+
+    DATA(lv_test) = 'Test'.
+  ENDMETHOD.
+
+  METHOD precheck_delete.
+    LOOP AT keys INTO DATA(ls_key).
+      APPEND VALUE #(  %tky               = ls_key-%tky
+                          %state_area        = 'VALIDATE_DELETE'
+                          ) TO reported-travel.
+*      IF travel-AgencyId IS NOT INITIAL AND NOT LIne_exists( valid_agencies[ agency_id = travel-AgencyId ] ).
+
+      APPEND VALUE #( %tky = ls_key-%tky ) TO failed-travel.
+
+      APPEND VALUE #( %tky = ls_key-%tky
+       %state_area        = 'VALIDATE_DELETE'
+                      %msg = new_message_with_text(
+                                                     text = 'You do not have Delete Authorization access'
+                                                     severity = if_abap_behv_message=>severity-error )
+                      %delete = if_abap_behv=>mk-on
+
+       ) TO reported-travel.
+    ENDLOOP.
   ENDMETHOD.
 
 ENDCLASS.
