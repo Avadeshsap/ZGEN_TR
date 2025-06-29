@@ -1,3 +1,112 @@
+CLASS lsc_zgen_i_travel DEFINITION INHERITING FROM cl_abap_behavior_saver.
+
+  PROTECTED SECTION.
+
+    METHODS save_modified REDEFINITION.
+
+
+ENDCLASS.
+
+CLASS lsc_zgen_i_travel IMPLEMENTATION.
+
+  METHOD save_modified.
+
+
+    DATA: travel_log        TYPE STANDARD TABLE OF zgen_travel_log,
+          travel_log_create TYPE STANDARD TABLE OF zgen_travel_log,
+          travel_log_update TYPE STANDARD TABLE OF zgen_travel_log.
+
+    IF create-travel IS NOT INITIAL.
+
+      travel_log = CORRESPONDING #( create-travel ).
+
+      LOOP AT travel_log ASSIGNING FIELD-SYMBOL(<lfs_travel_log>).
+
+        <lfs_travel_log>-changing_operation = 'CREATE'.
+
+        GET TIME STAMP FIELD <lfs_travel_log>-created_at.
+
+        TRY.
+
+            <lfs_travel_log>-change_id = cl_system_uuid=>create_uuid_x16_static(  ).
+
+          CATCH cx_uuid_error.
+        ENDTRY.
+
+        IF create-travel[ 1 ]-%control-BookingFee = cl_abap_behv=>flag_changed.
+
+
+          <lfs_travel_log>-changed_field_name = 'Booking Fee'.
+          <lfs_travel_log>-changed_value = create-travel[ 1 ]-BookingFee.
+
+        ENDIF.
+
+
+
+        APPEND <lfs_travel_log> TO travel_log_create.
+
+
+      ENDLOOP.
+
+
+      MODIFY zgen_travel_log FROM TABLE @travel_log_create.
+
+
+    ENDIF.
+
+
+
+
+    IF update-travel IS NOT INITIAL.
+
+
+      travel_log = CORRESPONDING #( update-travel ).
+
+
+      LOOP AT travel_log ASSIGNING FIELD-SYMBOL(<travel_log_update>).
+
+
+        <travel_log_update>-changing_operation = 'UPDATE'.
+        GET TIME STAMP FIELD <travel_log_update>-created_at.
+
+
+        TRY.
+
+            <travel_log_update>-change_id = cl_system_uuid=>create_uuid_x16_static(  ).
+
+          CATCH cx_uuid_error.
+        ENDTRY.
+
+
+        IF update-travel[ 1 ]-%control-CustomerId = cl_abap_behv=>flag_changed.
+
+
+          <travel_log_update>-changed_field_name = 'Customer Id'.
+          <travel_log_update>-changed_value = update-travel[ 1 ]-CustomerId.
+
+        ENDIF.
+
+        APPEND <travel_log_update> TO travel_log_update.
+
+      ENDLOOP.
+
+
+      MODIFY zgen_travel_log FROM TABLE @travel_log_update.
+
+
+    ENDIF.
+
+
+
+    IF delete-travel IS NOT INITIAL.
+
+    ENDIF.
+
+
+  ENDMETHOD.
+
+ENDCLASS.
+
 CLASS lhc_Travel DEFINITION INHERITING FROM cl_abap_behavior_handler.
   PRIVATE SECTION.
 
@@ -336,10 +445,10 @@ CLASS lhc_Travel IMPLEMENTATION.
     DATA: amounts_per_currencycode TYPE STANDARD TABLE OF ty_amount_per_currencycode.
 
     READ ENTITIES OF zgen_i_travel IN LOCAL MODE
-         ENTITY Travel
-         FIELDS ( BookingFee CurrencyCode )
-         WITH CORRESPONDING #( keys )
-         RESULT DATA(travels).
+     ENTITY Travel
+     FIELDS ( BookingFee CurrencyCode )
+     WITH CORRESPONDING #( keys )
+     RESULT DATA(travels).
 
     READ ENTITIES OF zgen_i_travel IN LOCAL MODE
          ENTITY Travel BY \_Booking

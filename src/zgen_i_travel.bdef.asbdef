@@ -1,10 +1,11 @@
-managed;
+managed with additional save  implementation in class zbp_gen_i_travel unique;
 strict ( 2 );
 with draft;
 
 define behavior for ZGEN_I_TRAVEL alias Travel
-implementation in class zbp_gen_i_travel unique
+
 persistent table zgen_travel
+//with additional save
 draft table zgen_d_travel
 lock master
 total etag LastChangedAt
@@ -128,6 +129,7 @@ etag master LocalLastChangedAt
       TravelUUID         = parent_uuid;
     }
 }
+
 
 define behavior for ZGEN_I_BKSUPPL alias BokkingSupplement
 implementation in class zbp_gen_i_bksuppl unique
